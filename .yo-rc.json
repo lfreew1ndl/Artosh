@@ -36,7 +36,9 @@
     "dtoSuffix": "DTO",
     "otherModules": [],
     "blueprints": [],
-    "prettierJava": true
+    "prettierJava": true,
+    "herokuAppName": "shielded-island-21096",
+    "herokuDeployType": "git"
   },
   "git-provider": "GitHub",
   "git-company": "lfreew1ndl",
