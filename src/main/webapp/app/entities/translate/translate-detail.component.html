@@ -1,0 +1,42 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="translate">
+            <h2><span jhiTranslate="artoshApp.translate.detail.title">Translate</span> {{ translate.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="artoshApp.translate.translate">Translate</span></dt>
+                <dd>
+                    <span>{{ translate.translate }}</span>
+                </dd>
+                <dt><span jhiTranslate="artoshApp.translate.language">Language</span></dt>
+                <dd>
+                    <div *ngIf="translate.language">
+                        <a [routerLink]="['/language', translate.language?.id, 'view']">{{ translate.language?.name }}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="artoshApp.translate.word">Word</span></dt>
+                <dd>
+                    <div *ngIf="translate.word">
+                        <a [routerLink]="['/word', translate.word?.id, 'view']">{{ translate.word?.word }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/translate', translate.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

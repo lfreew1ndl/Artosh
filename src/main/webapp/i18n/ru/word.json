@@ -1,0 +1,25 @@
+{
+  "artoshApp": {
+    "word": {
+      "home": {
+        "title": "Words",
+        "createLabel": "Создать новый Word",
+        "createOrEditLabel": "Создать или отредактировать Word",
+        "notFound": "No Words found"
+      },
+      "created": "Новый Word создан с идентификатором {{ param }}",
+      "updated": "Word обновлен с идентификатором {{ param }}",
+      "deleted": "Word удален с идентификатором {{ param }}",
+      "delete": {
+        "question": "Вы уверены что хотите удалить Word {{ id }}?"
+      },
+      "detail": {
+        "title": "Word"
+      },
+      "word": "Word",
+      "description": "Description",
+      "imageUrl": "Image Url",
+      "category": "Category"
+    }
+  }
+}

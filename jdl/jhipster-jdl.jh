@@ -1,0 +1,24 @@
+
+entity Category {
+	name String required minlength(1) maxlength(255)
+}
+
+entity Word {
+	word String required minlength(1) maxlength(255),
+    description String maxlength(255),
+    imageUrl String
+}
+
+entity Language {
+	name String required minlength(2) maxlength(255)
+}
+
+entity Translate {
+    translate String required minlength(1) maxlength(255)
+}
+
+relationship ManyToOne {
+	Word{category(name) required} to Category,
+    Translate{language(name) required} to Language,
+    Translate{word(word) required} to Word
+}

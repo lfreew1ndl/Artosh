@@ -1,0 +1,74 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-translate-heading" jhiTranslate="artoshApp.translate.home.createOrEditLabel">Create or edit a Translate</h2>
+
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+
+                <div class="form-group" [hidden]="!editForm.get('id')!.value">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="artoshApp.translate.translate" for="field_translate">Translate</label>
+                    <input type="text" class="form-control" name="translate" id="field_translate"
+                           formControlName="translate"/>
+                    <div *ngIf="editForm.get('translate')!.invalid && (editForm.get('translate')!.dirty || editForm.get('translate')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('translate')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('translate')?.errors?.minlength" jhiTranslate="entity.validation.minlength" [translateValues]="{ min: 1 }">
+                        This field is required to be at least 1 characters.
+                        </small>
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('translate')?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 255 }">
+                        This field cannot be longer than 255 characters.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="artoshApp.translate.language" for="field_language">Language</label>
+                    <select class="form-control" id="field_language" name="language" formControlName="language">
+                        <option *ngIf="!editForm.get('language')!.value" [ngValue]="null" selected></option>
+                        <option [ngValue]="languageOption.id === editForm.get('language')!.value?.id ? editForm.get('language')!.value : languageOption" *ngFor="let languageOption of languages; trackBy: trackById">{{ languageOption.name }}</option>
+                    </select>
+                </div>
+                <div *ngIf="editForm.get('language')!.invalid && (editForm.get('language')!.dirty || editForm.get('language')!.touched)">
+                    <small class="form-text text-danger"
+                           *ngIf="editForm.get('language')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="artoshApp.translate.word" for="field_word">Word</label>
+                    <select class="form-control" id="field_word" name="word" formControlName="word">
+                        <option *ngIf="!editForm.get('word')!.value" [ngValue]="null" selected></option>
+                        <option [ngValue]="wordOption.id === editForm.get('word')!.value?.id ? editForm.get('word')!.value : wordOption" *ngFor="let wordOption of words; trackBy: trackById">{{ wordOption.word }}</option>
+                    </select>
+                </div>
+                <div *ngIf="editForm.get('word')!.invalid && (editForm.get('word')!.dirty || editForm.get('word')!.touched)">
+                    <small class="form-text text-danger"
+                           *ngIf="editForm.get('word')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                    </small>
+                </div>
+            </div>
+
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

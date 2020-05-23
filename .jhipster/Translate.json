@@ -1,0 +1,45 @@
+{
+  "name": "Translate",
+  "fields": [
+    {
+      "fieldName": "translate",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required",
+        "minlength",
+        "maxlength"
+      ],
+      "fieldValidateRulesMinlength": "1",
+      "fieldValidateRulesMaxlength": "255"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "language",
+      "otherEntityRelationshipName": "translate",
+      "relationshipValidateRules": "required",
+      "relationshipName": "language",
+      "otherEntityField": "name"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "word",
+      "otherEntityRelationshipName": "translate",
+      "relationshipValidateRules": "required",
+      "relationshipName": "word",
+      "otherEntityField": "word"
+    }
+  ],
+  "changelogDate": "20200522120403",
+  "entityTableName": "translate",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

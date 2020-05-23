@@ -49,6 +49,10 @@ public class CacheConfiguration {
             createCache(cm, com.exceed.app.domain.User.class.getName() + ".authorities");
             createCache(cm, com.exceed.app.domain.PersistentToken.class.getName());
             createCache(cm, com.exceed.app.domain.User.class.getName() + ".persistentTokens");
+            createCache(cm, com.exceed.app.domain.Category.class.getName());
+            createCache(cm, com.exceed.app.domain.Word.class.getName());
+            createCache(cm, com.exceed.app.domain.Language.class.getName());
+            createCache(cm, com.exceed.app.domain.Translate.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

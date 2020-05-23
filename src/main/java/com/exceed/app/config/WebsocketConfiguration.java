@@ -43,6 +43,12 @@ public class WebsocketConfiguration implements WebSocketMessageBrokerConfigurer 
             .setAllowedOrigins(allowedOrigins)
             .withSockJS()
             .setInterceptors(httpSessionHandshakeInterceptor());
+        registry
+            .addEndpoint("/websocket/game")
+            .setHandshakeHandler(defaultHandshakeHandler())
+            .setAllowedOrigins(allowedOrigins)
+            .withSockJS()
+            .setInterceptors(httpSessionHandshakeInterceptor());
     }
 
     @Bean

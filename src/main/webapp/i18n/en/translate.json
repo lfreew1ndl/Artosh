@@ -1,0 +1,24 @@
+{
+  "artoshApp": {
+    "translate": {
+      "home": {
+        "title": "Translates",
+        "createLabel": "Create a new Translate",
+        "createOrEditLabel": "Create or edit a Translate",
+        "notFound": "No Translates found"
+      },
+      "created": "A new Translate is created with identifier {{ param }}",
+      "updated": "A Translate is updated with identifier {{ param }}",
+      "deleted": "A Translate is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Translate {{ id }}?"
+      },
+      "detail": {
+        "title": "Translate"
+      },
+      "translate": "Translate",
+      "language": "Language",
+      "word": "Word"
+    }
+  }
+}
