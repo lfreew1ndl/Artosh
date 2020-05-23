@@ -8,7 +8,7 @@ import { RoomModel} from "app/core/game/room-model";
 import { CSRFService } from 'app/core/auth/csrf.service';
 
 @Injectable({ providedIn: 'root' })
-export class GameService {
+export class LobbyService {
   private stompClient: Stomp.Client | null = null;
   private connectionSubject: ReplaySubject<void> = new ReplaySubject(1);
   private connectionSubscription: Subscription | null = null;

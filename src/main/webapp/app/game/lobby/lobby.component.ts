@@ -1,7 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {RoomModel} from "app/core/game/room-model";
 import {Subscription} from "rxjs";
-import {GameService} from "app/game/game.service";
+import {LobbyService} from "app/game/lobby/lobby.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'jhi-lobby',
@@ -13,11 +14,12 @@ export class LobbyComponent implements OnInit, OnDestroy {
   subscription?: Subscription;
   roomModel: RoomModel | undefined;
 
-  constructor(private gameService: GameService) {
+  constructor(private gameService: LobbyService, private router: Router) {
   }
 
   showActivity(roomModel: RoomModel): void {
     this.roomModel = roomModel;
+    this.router.navigate(["wordTranslateGame/" + roomModel.room])
   }
 
   ngOnInit(): void {

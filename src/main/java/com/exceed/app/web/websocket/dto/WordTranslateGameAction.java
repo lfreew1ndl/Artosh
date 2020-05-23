@@ -2,17 +2,16 @@ package com.exceed.app.web.websocket.dto;
 
 import java.time.Instant;
 
-/**
- * DTO for storing a game requests.
- */
-public class GameDTO { //todo rename it
+public class WordTranslateGameAction {
     private String sessionId;
 
     private String userLogin;
 
     private String ipAddress;
 
-    private String type;
+    private String action;
+
+    private String data;
 
     private Instant time;
 
@@ -40,12 +39,20 @@ public class GameDTO { //todo rename it
         this.ipAddress = ipAddress;
     }
 
-    public String getType() {
-        return type;
+    public String getAction() {
+        return action;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
     }
 
     public Instant getTime() {
@@ -56,15 +63,15 @@ public class GameDTO { //todo rename it
         this.time = time;
     }
 
-    // prettier-ignore
     @Override
     public String toString() {
-        return "ActivityDTO{" +
+        return "WordTranslateGameAction{" +
             "sessionId='" + sessionId + '\'' +
             ", userLogin='" + userLogin + '\'' +
             ", ipAddress='" + ipAddress + '\'' +
-            ", page='" + type + '\'' +
-            ", time='" + time + '\'' +
+            ", action='" + action + '\'' +
+            ", data='" + data + '\'' +
+            ", time=" + time +
             '}';
     }
 }

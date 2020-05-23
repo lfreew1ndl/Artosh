@@ -9,6 +9,12 @@ import { RouterModule } from '@angular/router';
         loadChildren: () => import('./lobby/lobby.module').then(m => m.ArtoshLobbyModule),
       },
     ]),
+    RouterModule.forChild([
+      {
+        path: 'wordTranslateGame/:roomId',
+        loadChildren: () => import('./word-translate/word-translate-game.module').then(m => m.ArtoshWordTranslateGameModule),
+      },
+    ]),
   ],
 })
 export class ArtoshGameModule {}

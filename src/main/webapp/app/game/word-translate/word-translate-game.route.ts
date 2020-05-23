@@ -1,18 +1,16 @@
 import { Routes } from '@angular/router';
 
 import { Authority } from 'app/shared/constants/authority.constants';
-import {LobbyComponent} from "./lobby.component";
+import {WordTranslateGameComponent} from "./word-translate-game.component";
 
-export const lobbyRoute: Routes = [
+export const wordTranslateGameRoute: Routes = [
   {
     path: '',
-    component: LobbyComponent,
+    component: WordTranslateGameComponent,
     data: {
       authorities: [Authority.USER],
       // eslint-disable-next-line
       pageTitle: 'artoshApp.category.home.title', //todo rename it
     },
-    // eslint-disable-next-line
-    // canActivate: [UserRouteAccessService], //todo remove it
   }
 ];
