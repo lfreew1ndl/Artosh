@@ -21,12 +21,12 @@
     <div class="table-responsive" id="entities" *ngIf="words && words.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
-                <tr>
-                    <th scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
-                    <th scope="col" ><span jhiTranslate="artoshApp.word.word">Word</span></th>
-                    <th scope="col" ><span jhiTranslate="artoshApp.word.description">Description</span></th>
-                    <th scope="col" ><span jhiTranslate="artoshApp.word.imageUrl">Image Url</span></th>
-                    <th scope="col" ><span jhiTranslate="artoshApp.word.category">Category</span></th>
+                <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+                    <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="word"><span jhiTranslate="artoshApp.word.word">Word</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="description"><span jhiTranslate="artoshApp.word.description">Description</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="imageUrl"><span jhiTranslate="artoshApp.word.imageUrl">Image Url</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="categoryName"><span jhiTranslate="artoshApp.word.category">Category</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -37,8 +37,8 @@
                     <td>{{ word.description }}</td>
                     <td>{{ word.imageUrl }}</td>
                     <td>
-                        <div *ngIf="word.category">
-                            <a [routerLink]="['/category', word.category?.id, 'view']" >{{ word.category?.name }}</a>
+                        <div *ngIf="word.categoryId">
+                            <a [routerLink]="['/category', word.categoryId , 'view']" >{{ word.categoryName }}</a>
                         </div>
                     </td>
                     <td class="text-right">
@@ -67,5 +67,15 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+
+    <div *ngIf="words && words.length > 0">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="ngbPaginationPage" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage($event)"></ngb-pagination>
+        </div>
     </div>
 </div>

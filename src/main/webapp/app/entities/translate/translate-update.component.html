@@ -33,28 +33,28 @@
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="artoshApp.translate.language" for="field_language">Language</label>
-                    <select class="form-control" id="field_language" name="language" formControlName="language">
-                        <option *ngIf="!editForm.get('language')!.value" [ngValue]="null" selected></option>
-                        <option [ngValue]="languageOption.id === editForm.get('language')!.value?.id ? editForm.get('language')!.value : languageOption" *ngFor="let languageOption of languages; trackBy: trackById">{{ languageOption.name }}</option>
+                    <select class="form-control" id="field_language" name="language" formControlName="languageId">
+                        <option *ngIf="!editForm.get('languageId')!.value" [ngValue]="null" selected></option>
+                        <option [ngValue]="languageOption.id" *ngFor="let languageOption of languages; trackBy: trackById">{{ languageOption.name }}</option>
                     </select>
                 </div>
-                <div *ngIf="editForm.get('language')!.invalid && (editForm.get('language')!.dirty || editForm.get('language')!.touched)">
+                <div *ngIf="editForm.get('languageId')!.invalid && (editForm.get('languageId')!.dirty || editForm.get('languageId')!.touched)">
                     <small class="form-text text-danger"
-                           *ngIf="editForm.get('language')?.errors?.required" jhiTranslate="entity.validation.required">
+                           *ngIf="editForm.get('languageId')?.errors?.required" jhiTranslate="entity.validation.required">
                         This field is required.
                     </small>
                 </div>
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="artoshApp.translate.word" for="field_word">Word</label>
-                    <select class="form-control" id="field_word" name="word" formControlName="word">
-                        <option *ngIf="!editForm.get('word')!.value" [ngValue]="null" selected></option>
-                        <option [ngValue]="wordOption.id === editForm.get('word')!.value?.id ? editForm.get('word')!.value : wordOption" *ngFor="let wordOption of words; trackBy: trackById">{{ wordOption.word }}</option>
+                    <select class="form-control" id="field_word" name="word" formControlName="wordId">
+                        <option *ngIf="!editForm.get('wordId')!.value" [ngValue]="null" selected></option>
+                        <option [ngValue]="wordOption.id" *ngFor="let wordOption of words; trackBy: trackById">{{ wordOption.word }}</option>
                     </select>
                 </div>
-                <div *ngIf="editForm.get('word')!.invalid && (editForm.get('word')!.dirty || editForm.get('word')!.touched)">
+                <div *ngIf="editForm.get('wordId')!.invalid && (editForm.get('wordId')!.dirty || editForm.get('wordId')!.touched)">
                     <small class="form-text text-danger"
-                           *ngIf="editForm.get('word')?.errors?.required" jhiTranslate="entity.validation.required">
+                           *ngIf="editForm.get('wordId')?.errors?.required" jhiTranslate="entity.validation.required">
                         This field is required.
                     </small>
                 </div>

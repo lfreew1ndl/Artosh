@@ -1,4 +1,3 @@
 export class RoomModel {
-  constructor(public sessionId: string, public userLogin: string, public ipAddress: string, public room: string, public time: string) {
-  }
+  constructor(public sessionId: string, public userLogin: string, public ipAddress: string, public roomId: string, public time: string) {}
 }

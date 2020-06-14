@@ -23,7 +23,7 @@ export class WordUpdateComponent implements OnInit {
     word: [null, [Validators.required, Validators.minLength(1), Validators.maxLength(255)]],
     description: [null, [Validators.maxLength(255)]],
     imageUrl: [],
-    category: [null, Validators.required],
+    categoryId: [null, Validators.required],
   });
 
   constructor(
@@ -47,7 +47,7 @@ export class WordUpdateComponent implements OnInit {
       word: word.word,
       description: word.description,
       imageUrl: word.imageUrl,
-      category: word.category,
+      categoryId: word.categoryId,
     });
   }
 
@@ -72,7 +72,7 @@ export class WordUpdateComponent implements OnInit {
       word: this.editForm.get(['word'])!.value,
       description: this.editForm.get(['description'])!.value,
       imageUrl: this.editForm.get(['imageUrl'])!.value,
-      category: this.editForm.get(['category'])!.value,
+      categoryId: this.editForm.get(['categoryId'])!.value,
     };
   }
 

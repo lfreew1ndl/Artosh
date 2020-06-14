@@ -22,8 +22,8 @@
                 </dd>
                 <dt><span jhiTranslate="artoshApp.word.category">Category</span></dt>
                 <dd>
-                    <div *ngIf="word.category">
-                        <a [routerLink]="['/category', word.category?.id, 'view']">{{ word.category?.name }}</a>
+                    <div *ngIf="word.categoryId">
+                        <a [routerLink]="['/category', word.categoryId, 'view']">{{ word.categoryName }}</a>
                     </div>
                 </dd>
             </dl>

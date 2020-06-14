@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
-import { Router} from '@angular/router';
-import {Subscription, ReplaySubject, Subject} from 'rxjs';
+import { Router } from '@angular/router';
+import { Subscription, ReplaySubject, Subject } from 'rxjs';
 import * as SockJS from 'sockjs-client';
 import * as Stomp from 'webstomp-client';
-import { RoomModel} from "app/core/game/room-model";
+import { RoomModel } from 'app/core/game/room-model';
 import { CSRFService } from 'app/core/auth/csrf.service';
 
 @Injectable({ providedIn: 'root' })
@@ -23,7 +23,7 @@ export class LobbyService {
     }
 
     // building absolute path so that websocket doesn't fail when deploying with a context path
-    let url = '/websocket/game';
+    let url = '/websocket/lobby';
     url = this.location.prepareExternalUrl(url);
     const socket: WebSocket = new SockJS(url);
     this.stompClient = Stomp.over(socket);
@@ -59,7 +59,7 @@ export class LobbyService {
 
     this.connectionSubscription = this.connectionSubject.subscribe(() => {
       if (this.stompClient) {
-        this.stompSubscription = this.stompClient.subscribe('/user/topic/game', (data: Stomp.Message) => {
+        this.stompSubscription = this.stompClient.subscribe('/user/topic/lobby', (data: Stomp.Message) => {
           this.listenerSubject.next(JSON.parse(data.body));
         });
       }
@@ -81,8 +81,8 @@ export class LobbyService {
   private findGame(): void {
     if (this.stompClient && this.stompClient.connected) {
       this.stompClient.send(
-        '/topic/game', // destination
-        JSON.stringify({ type: "word-translate" }), // body
+        '/topic/lobby', // destination
+        JSON.stringify({ type: 'word-translate' }), // body
         {} // header
       );
     }

@@ -1,11 +1,10 @@
-import { ICategory } from 'app/shared/model/category.model';
-
 export interface IWord {
   id?: number;
   word?: string;
   description?: string;
   imageUrl?: string;
-  category?: ICategory;
+  categoryName?: string;
+  categoryId?: number;
 }
 
 export class Word implements IWord {
@@ -14,6 +13,7 @@ export class Word implements IWord {
     public word?: string,
     public description?: string,
     public imageUrl?: string,
-    public category?: ICategory
+    public categoryName?: string,
+    public categoryId?: number
   ) {}
 }

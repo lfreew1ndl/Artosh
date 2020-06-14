@@ -1,9 +1,19 @@
 package com.exceed.app.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import com.exceed.app.ArtoshApp;
 import com.exceed.app.domain.Category;
 import com.exceed.app.repository.CategoryRepository;
-
+import com.exceed.app.service.CategoryService;
+import com.exceed.app.service.dto.CategoryDTO;
+import com.exceed.app.service.mapper.CategoryMapper;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +23,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Integration tests for the {@link CategoryResource} REST controller.
@@ -29,12 +31,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser
 public class CategoryResourceIT {
-
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private CategoryMapper categoryMapper;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @Autowired
     private EntityManager em;
@@ -51,10 +58,10 @@ public class CategoryResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Category createEntity(EntityManager em) {
-        Category category = new Category()
-            .name(DEFAULT_NAME);
+        Category category = new Category().name(DEFAULT_NAME);
         return category;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -62,8 +69,7 @@ public class CategoryResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Category createUpdatedEntity(EntityManager em) {
-        Category category = new Category()
-            .name(UPDATED_NAME);
+        Category category = new Category().name(UPDATED_NAME);
         return category;
     }
 
@@ -77,9 +83,14 @@ public class CategoryResourceIT {
     public void createCategory() throws Exception {
         int databaseSizeBeforeCreate = categoryRepository.findAll().size();
         // Create the Category
-        restCategoryMockMvc.perform(post("/api/categories").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(category)))
+        CategoryDTO categoryDTO = categoryMapper.toDto(category);
+        restCategoryMockMvc
+            .perform(
+                post("/api/categories")
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(categoryDTO))
+            )
             .andExpect(status().isCreated());
 
         // Validate the Category in the database
@@ -96,18 +107,22 @@ public class CategoryResourceIT {
 
         // Create the Category with an existing ID
         category.setId(1L);
+        CategoryDTO categoryDTO = categoryMapper.toDto(category);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restCategoryMockMvc.perform(post("/api/categories").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(category)))
+        restCategoryMockMvc
+            .perform(
+                post("/api/categories")
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(categoryDTO))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Category in the database
         List<Category> categoryList = categoryRepository.findAll();
         assertThat(categoryList).hasSize(databaseSizeBeforeCreate);
     }
-
 
     @Test
     @Transactional
@@ -117,11 +132,15 @@ public class CategoryResourceIT {
         category.setName(null);
 
         // Create the Category, which fails.
+        CategoryDTO categoryDTO = categoryMapper.toDto(category);
 
-
-        restCategoryMockMvc.perform(post("/api/categories").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(category)))
+        restCategoryMockMvc
+            .perform(
+                post("/api/categories")
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(categoryDTO))
+            )
             .andExpect(status().isBadRequest());
 
         List<Category> categoryList = categoryRepository.findAll();
@@ -135,13 +154,14 @@ public class CategoryResourceIT {
         categoryRepository.saveAndFlush(category);
 
         // Get all the categoryList
-        restCategoryMockMvc.perform(get("/api/categories?sort=id,desc"))
+        restCategoryMockMvc
+            .perform(get("/api/categories?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(category.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)));
     }
-    
+
     @Test
     @Transactional
     public void getCategory() throws Exception {
@@ -149,18 +169,19 @@ public class CategoryResourceIT {
         categoryRepository.saveAndFlush(category);
 
         // Get the category
-        restCategoryMockMvc.perform(get("/api/categories/{id}", category.getId()))
+        restCategoryMockMvc
+            .perform(get("/api/categories/{id}", category.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(category.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME));
     }
+
     @Test
     @Transactional
     public void getNonExistingCategory() throws Exception {
         // Get the category
-        restCategoryMockMvc.perform(get("/api/categories/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restCategoryMockMvc.perform(get("/api/categories/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -175,12 +196,16 @@ public class CategoryResourceIT {
         Category updatedCategory = categoryRepository.findById(category.getId()).get();
         // Disconnect from session so that the updates on updatedCategory are not directly saved in db
         em.detach(updatedCategory);
-        updatedCategory
-            .name(UPDATED_NAME);
+        updatedCategory.name(UPDATED_NAME);
+        CategoryDTO categoryDTO = categoryMapper.toDto(updatedCategory);
 
-        restCategoryMockMvc.perform(put("/api/categories").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedCategory)))
+        restCategoryMockMvc
+            .perform(
+                put("/api/categories")
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(categoryDTO))
+            )
             .andExpect(status().isOk());
 
         // Validate the Category in the database
@@ -195,10 +220,17 @@ public class CategoryResourceIT {
     public void updateNonExistingCategory() throws Exception {
         int databaseSizeBeforeUpdate = categoryRepository.findAll().size();
 
+        // Create the Category
+        CategoryDTO categoryDTO = categoryMapper.toDto(category);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restCategoryMockMvc.perform(put("/api/categories").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(category)))
+        restCategoryMockMvc
+            .perform(
+                put("/api/categories")
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(categoryDTO))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Category in the database
@@ -215,8 +247,8 @@ public class CategoryResourceIT {
         int databaseSizeBeforeDelete = categoryRepository.findAll().size();
 
         // Delete the category
-        restCategoryMockMvc.perform(delete("/api/categories/{id}", category.getId()).with(csrf())
-            .accept(MediaType.APPLICATION_JSON))
+        restCategoryMockMvc
+            .perform(delete("/api/categories/{id}", category.getId()).with(csrf()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

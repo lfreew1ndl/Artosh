@@ -17,8 +17,22 @@ entity Translate {
     translate String required minlength(1) maxlength(255)
 }
 
+entity UserExtra {
+    gramarScore Integer required min(0),
+    vocabularyScore Integer required min(0),
+    lisningScore Integer required min(0)
+}
+
+relationship OneToOne {
+	UserExtra{user(login) required} to User
+}
+
 relationship ManyToOne {
 	Word{category(name) required} to Category,
     Translate{language(name) required} to Language,
+    UserExtra{language(name) required} to Language,
     Translate{word(word) required} to Word
 }
+paginate all with pagination
+service all with serviceImpl
+dto all with mapstruct

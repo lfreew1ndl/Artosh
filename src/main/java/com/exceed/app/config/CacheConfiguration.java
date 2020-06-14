@@ -53,6 +53,7 @@ public class CacheConfiguration {
             createCache(cm, com.exceed.app.domain.Word.class.getName());
             createCache(cm, com.exceed.app.domain.Language.class.getName());
             createCache(cm, com.exceed.app.domain.Translate.class.getName());
+            createCache(cm, com.exceed.app.domain.UserExtra.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

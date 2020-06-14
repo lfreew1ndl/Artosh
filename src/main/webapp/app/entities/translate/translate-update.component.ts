@@ -26,8 +26,8 @@ export class TranslateUpdateComponent implements OnInit {
   editForm = this.fb.group({
     id: [],
     translate: [null, [Validators.required, Validators.minLength(1), Validators.maxLength(255)]],
-    language: [null, Validators.required],
-    word: [null, Validators.required],
+    languageId: [null, Validators.required],
+    wordId: [null, Validators.required],
   });
 
   constructor(
@@ -52,8 +52,8 @@ export class TranslateUpdateComponent implements OnInit {
     this.editForm.patchValue({
       id: translate.id,
       translate: translate.translate,
-      language: translate.language,
-      word: translate.word,
+      languageId: translate.languageId,
+      wordId: translate.wordId,
     });
   }
 
@@ -76,8 +76,8 @@ export class TranslateUpdateComponent implements OnInit {
       ...new Translate(),
       id: this.editForm.get(['id'])!.value,
       translate: this.editForm.get(['translate'])!.value,
-      language: this.editForm.get(['language'])!.value,
-      word: this.editForm.get(['word'])!.value,
+      languageId: this.editForm.get(['languageId'])!.value,
+      wordId: this.editForm.get(['wordId'])!.value,
     };
   }
 

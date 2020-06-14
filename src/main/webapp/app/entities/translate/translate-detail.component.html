@@ -14,14 +14,14 @@
                 </dd>
                 <dt><span jhiTranslate="artoshApp.translate.language">Language</span></dt>
                 <dd>
-                    <div *ngIf="translate.language">
-                        <a [routerLink]="['/language', translate.language?.id, 'view']">{{ translate.language?.name }}</a>
+                    <div *ngIf="translate.languageId">
+                        <a [routerLink]="['/language', translate.languageId, 'view']">{{ translate.languageName }}</a>
                     </div>
                 </dd>
                 <dt><span jhiTranslate="artoshApp.translate.word">Word</span></dt>
                 <dd>
-                    <div *ngIf="translate.word">
-                        <a [routerLink]="['/word', translate.word?.id, 'view']">{{ translate.word?.word }}</a>
+                    <div *ngIf="translate.wordId">
+                        <a [routerLink]="['/word', translate.wordId, 'view']">{{ translate.wordWord }}</a>
                     </div>
                 </dd>
             </dl>

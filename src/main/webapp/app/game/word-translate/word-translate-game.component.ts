@@ -1,33 +1,39 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Subscription} from "rxjs";
-import {ActivatedRoute} from "@angular/router";
-import {WordTranslateGameService} from "app/game/word-translate/word-translate-game.service";
-import {WordTranslateGameAction} from "app/core/game/word-translate-game-action";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { WordTranslateGameService } from 'app/game/word-translate/word-translate-game.service';
+import { WordTranslateGameAction } from 'app/core/game/word-translate-game-action';
+
+class WordTranslateData {
+  orderNumberOfWord: number | undefined;
+  currentWord: String | undefined;
+  translateOptions: Array<String> | undefined;
+}
 
 @Component({
   selector: 'jhi-word-translate-game',
   templateUrl: './word-translate-game.component.html',
-  styleUrls: ['./word-translate-game.component.scss']
+  styleUrls: ['./word-translate-game.component.scss'],
 })
 export class WordTranslateGameComponent implements OnInit, OnDestroy {
-
   subscription?: Subscription;
   roomId: number | undefined;
   testString: string | undefined;
+  gameData: WordTranslateData | undefined;
+  isGameStarted = false;
 
-  constructor(private gameService: WordTranslateGameService, private route: ActivatedRoute) {
-  }
+  constructor(private gameService: WordTranslateGameService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      let roomId = params["roomId"];
-      this.roomId = roomId
+      const roomId = params['roomId'];
+      this.roomId = roomId;
       this.gameService.connect(roomId);
-      this.gameService.subscribe(roomId);
+      this.gameService.subscribe();
       this.subscription = this.gameService.receive().subscribe((gameAction: WordTranslateGameAction) => {
         this.processGameAction(gameAction);
       });
-    })
+    });
   }
 
   ngOnDestroy(): void {
@@ -37,16 +43,26 @@ export class WordTranslateGameComponent implements OnInit, OnDestroy {
     }
   }
 
-  private processGameAction(gameAction: WordTranslateGameAction) {
+  private processGameAction(gameAction: WordTranslateGameAction): any {
     switch (gameAction.action) {
-      case "start_game": {
-        this.testString = gameAction.action
-        break
+      case 'game_confirmed': {
+        this.testString = gameAction.action;
+        break;
+      }
+      case 'next_card': {
+        this.gameData = gameAction.data;
+        this.isGameStarted = true;
+        break;
       }
       default: {
-        this.testString = gameAction.action
-        break
+        this.testString = gameAction.action;
+        break;
       }
     }
+  }
+
+  chooseAnswer(option: String | undefined): void {
+    const gameAction = new WordTranslateGameAction('answer', option);
+    this.gameService.produceGameAction(gameAction);
   }
 }

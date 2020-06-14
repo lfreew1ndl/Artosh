@@ -4,20 +4,14 @@
     {
       "fieldName": "word",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required",
-        "minlength",
-        "maxlength"
-      ],
+      "fieldValidateRules": ["required", "minlength", "maxlength"],
       "fieldValidateRulesMinlength": "1",
       "fieldValidateRulesMaxlength": "255"
     },
     {
       "fieldName": "description",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "maxlength"
-      ],
+      "fieldValidateRules": ["maxlength"],
       "fieldValidateRulesMaxlength": "255"
     },
     {
@@ -37,13 +31,15 @@
   ],
   "changelogDate": "20200522120203",
   "entityTableName": "word",
-  "dto": "no",
-  "pagination": "no",
-  "service": "no",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
   "clientRootFolder": "",
-  "applications": "*"
+  "applications": "*",
+  "searchEngine": false,
+  "databaseType": "sql"
 }

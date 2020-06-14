@@ -4,11 +4,7 @@
     {
       "fieldName": "translate",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required",
-        "minlength",
-        "maxlength"
-      ],
+      "fieldValidateRules": ["required", "minlength", "maxlength"],
       "fieldValidateRulesMinlength": "1",
       "fieldValidateRulesMaxlength": "255"
     }
@@ -33,9 +29,9 @@
   ],
   "changelogDate": "20200522120403",
   "entityTableName": "translate",
-  "dto": "no",
-  "pagination": "no",
-  "service": "no",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
   "readOnly": false,

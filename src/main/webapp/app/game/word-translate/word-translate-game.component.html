@@ -1,2 +1,9 @@
 <p>word-translate-game works!</p>
 {{roomId}}
+{{testString}}
+<div id="game_board" *ngIf="isGameStarted">
+    <div> {{gameData?.orderNumberOfWord}} </div>
+    <div> {{gameData?.currentWord}}</div>
+    <button *ngFor="let option of gameData?.translateOptions"
+            (click)="chooseAnswer(option)">{{option}}</button>
+</div>

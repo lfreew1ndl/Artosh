@@ -1,18 +1,26 @@
 package com.exceed.app.service.dto;
 
-public class WordDTO {
+import java.io.Serializable;
+import javax.validation.constraints.*;
+
+/**
+ * A DTO for the {@link com.exceed.app.domain.Word} entity.
+ */
+public class WordDTO implements Serializable {
     private Long id;
 
+    @NotNull
+    @Size(min = 1, max = 255)
     private String word;
 
+    @Size(max = 255)
     private String description;
 
     private String imageUrl;
 
-    private String category;
+    private Long categoryId;
 
-    public WordDTO() {
-    }
+    private String categoryName;
 
     public Long getId() {
         return id;
@@ -46,11 +54,49 @@ public class WordDTO {
         this.imageUrl = imageUrl;
     }
 
-    public String getCategory() {
-        return category;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof WordDTO)) {
+            return false;
+        }
+
+        return id != null && id.equals(((WordDTO) o).id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 31;
+    }
+
+    // prettier-ignore
+    @Override
+    public String toString() {
+        return "WordDTO{" +
+            "id=" + getId() +
+            ", word='" + getWord() + "'" +
+            ", description='" + getDescription() + "'" +
+            ", imageUrl='" + getImageUrl() + "'" +
+            ", categoryId=" + getCategoryId() +
+            ", categoryName='" + getCategoryName() + "'" +
+            "}";
     }
 }
