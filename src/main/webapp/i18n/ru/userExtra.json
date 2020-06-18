@@ -1,0 +1,26 @@
+{
+  "artoshApp": {
+    "userExtra": {
+      "home": {
+        "title": "User Extras",
+        "createLabel": "Создать новый User Extra",
+        "createOrEditLabel": "Создать или отредактировать User Extra",
+        "notFound": "No User Extras found"
+      },
+      "created": "Новый User Extra создан с идентификатором {{ param }}",
+      "updated": "User Extra обновлен с идентификатором {{ param }}",
+      "deleted": "User Extra удален с идентификатором {{ param }}",
+      "delete": {
+        "question": "Вы уверены что хотите удалить User Extra {{ id }}?"
+      },
+      "detail": {
+        "title": "User Extra"
+      },
+      "gramarScore": "Gramar Score",
+      "vocabularyScore": "Vocabulary Score",
+      "lisningScore": "Lisning Score",
+      "user": "User",
+      "language": "Language"
+    }
+  }
+}
