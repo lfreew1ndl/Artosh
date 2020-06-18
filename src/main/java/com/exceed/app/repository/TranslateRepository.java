@@ -1,7 +1,7 @@
 package com.exceed.app.repository;
 
 import com.exceed.app.domain.Translate;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
 /**

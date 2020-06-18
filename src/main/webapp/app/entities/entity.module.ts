@@ -20,6 +20,10 @@ import { RouterModule } from '@angular/router';
         path: 'translate',
         loadChildren: () => import('./translate/translate.module').then(m => m.ArtoshTranslateModule),
       },
+      {
+        path: 'user-extra',
+        loadChildren: () => import('./user-extra/user-extra.module').then(m => m.ArtoshUserExtraModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

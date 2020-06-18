@@ -5,12 +5,11 @@ import com.exceed.app.repository.TranslateRepository;
 import com.exceed.app.service.TranslateService;
 import com.exceed.app.service.dto.TranslateDTO;
 import com.exceed.app.service.mapper.TranslateMapper;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,13 +47,14 @@ public class TranslateServiceImpl implements TranslateService {
     /**
      * Get all the translates.
      *
+     * @param pageable the pagination information.
      * @return the list of entities.
      */
     @Override
     @Transactional(readOnly = true)
-    public List<TranslateDTO> findAll() {
+    public Page<TranslateDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Translates");
-        return translateRepository.findAll().stream().map(translateMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
+        return translateRepository.findAll(pageable).map(translateMapper::toDto);
     }
 
     /**

@@ -1,10 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
+import { HttpHeaders, HttpResponse } from '@angular/common/http';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { JhiEventManager } from 'ng-jhipster';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ILanguage } from 'app/shared/model/language.model';
+
+import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
 import { LanguageService } from './language.service';
 import { LanguageDeleteDialogComponent } from './language-delete-dialog.component';
 
@@ -15,16 +18,64 @@ import { LanguageDeleteDialogComponent } from './language-delete-dialog.componen
 export class LanguageComponent implements OnInit, OnDestroy {
   languages?: ILanguage[];
   eventSubscriber?: Subscription;
+  totalItems = 0;
+  itemsPerPage = ITEMS_PER_PAGE;
+  page!: number;
+  predicate!: string;
+  ascending!: boolean;
+  ngbPaginationPage = 1;
 
-  constructor(protected languageService: LanguageService, protected eventManager: JhiEventManager, protected modalService: NgbModal) {}
+  constructor(
+    protected languageService: LanguageService,
+    protected activatedRoute: ActivatedRoute,
+    protected router: Router,
+    protected eventManager: JhiEventManager,
+    protected modalService: NgbModal
+  ) {}
 
-  loadAll(): void {
-    this.languageService.query().subscribe((res: HttpResponse<ILanguage[]>) => (this.languages = res.body || []));
+  loadPage(page?: number): void {
+    const pageToLoad: number = page || this.page;
+
+    this.languageService
+      .query({
+        page: pageToLoad - 1,
+        size: this.itemsPerPage,
+        sort: this.sort(),
+      })
+      .subscribe(
+        (res: HttpResponse<ILanguage[]>) => this.onSuccess(res.body, res.headers, pageToLoad),
+        () => this.onError()
+      );
   }
 
   ngOnInit(): void {
-    this.loadAll();
+    this.activatedRoute.data.subscribe(data => {
+      this.page = data.pagingParams.page;
+      this.ascending = data.pagingParams.ascending;
+      this.predicate = data.pagingParams.predicate;
+      this.ngbPaginationPage = data.pagingParams.page;
+      this.loadPage();
+    });
+    this.handleBackNavigation();
     this.registerChangeInLanguages();
+  }
+
+  handleBackNavigation(): void {
+    this.activatedRoute.queryParamMap.subscribe((params: ParamMap) => {
+      const prevPage = params.get('page');
+      const prevSort = params.get('sort');
+      const prevSortSplit = prevSort?.split(',');
+      if (prevSortSplit) {
+        this.predicate = prevSortSplit[0];
+        this.ascending = prevSortSplit[1] === 'asc';
+      }
+      if (prevPage && +prevPage !== this.page) {
+        this.ngbPaginationPage = +prevPage;
+        this.loadPage(+prevPage);
+      } else {
+        this.loadPage(this.page);
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -39,11 +90,36 @@ export class LanguageComponent implements OnInit, OnDestroy {
   }
 
   registerChangeInLanguages(): void {
-    this.eventSubscriber = this.eventManager.subscribe('languageListModification', () => this.loadAll());
+    this.eventSubscriber = this.eventManager.subscribe('languageListModification', () => this.loadPage());
   }
 
   delete(language: ILanguage): void {
     const modalRef = this.modalService.open(LanguageDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.language = language;
+  }
+
+  sort(): string[] {
+    const result = [this.predicate + ',' + (this.ascending ? 'asc' : 'desc')];
+    if (this.predicate !== 'id') {
+      result.push('id');
+    }
+    return result;
+  }
+
+  protected onSuccess(data: ILanguage[] | null, headers: HttpHeaders, page: number): void {
+    this.totalItems = Number(headers.get('X-Total-Count'));
+    this.page = page;
+    this.router.navigate(['/language'], {
+      queryParams: {
+        page: this.page,
+        size: this.itemsPerPage,
+        sort: this.predicate + ',' + (this.ascending ? 'asc' : 'desc'),
+      },
+    });
+    this.languages = data || [];
+  }
+
+  protected onError(): void {
+    this.ngbPaginationPage = this.page;
   }
 }

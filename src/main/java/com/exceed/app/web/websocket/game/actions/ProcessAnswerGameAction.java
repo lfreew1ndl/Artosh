@@ -1,6 +1,8 @@
 package com.exceed.app.web.websocket.game.actions;
 
+import com.exceed.app.service.dto.TranslateDTO;
 import com.exceed.app.web.websocket.game.WordTranslateGame;
+import com.exceed.app.web.websocket.game.dto.WordTranslatePlayerData;
 import java.security.Principal;
 
 public class ProcessAnswerGameAction extends GameAction {
@@ -14,7 +16,13 @@ public class ProcessAnswerGameAction extends GameAction {
 
     @Override
     public void execute() {
-        if (game.getLastTranslateDTO().getTranslate().equals(answer)) {} else {}
+        TranslateDTO lastTranslateDTO = game.getLastTranslateDTO();
+        WordTranslatePlayerData playerData = game.getPlayerDataMap().get(principal.getName());
+        if (lastTranslateDTO.getTranslate().equals(answer)) {
+            playerData.getCorrectTranslateWordDTOs().add(lastTranslateDTO);
+        } else {
+            playerData.getIncorrectTranslateWordDTOs().add(lastTranslateDTO);
+        }
         new NextCardGameAction(game, principal).execute();
     }
 }

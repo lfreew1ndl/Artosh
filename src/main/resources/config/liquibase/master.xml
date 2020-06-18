@@ -18,9 +18,11 @@
     <include file="config/liquibase/changelog/20200522120203_added_entity_Word.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20200522120303_added_entity_Language.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20200522120403_added_entity_Translate.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200614092425_added_entity_UserExtra.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20200522120203_added_entity_constraints_Word.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20200522120403_added_entity_constraints_Translate.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200614092425_added_entity_constraints_UserExtra.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>
