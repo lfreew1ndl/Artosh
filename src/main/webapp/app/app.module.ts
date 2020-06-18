@@ -16,6 +16,7 @@ import { ActiveMenuDirective } from './layouts/navbar/active-menu.directive';
 import { ErrorComponent } from './layouts/error/error.component';
 import { ArtoshGameModule } from 'app/game/game.module';
 import { GameListComponent } from './game/game-list/game-list.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   imports: [
@@ -27,6 +28,7 @@ import { GameListComponent } from './game/game-list/game-list.component';
     ArtoshEntityModule,
     ArtoshGameModule,
     ArtoshAppRoutingModule,
+    BrowserAnimationsModule,
   ],
   declarations: [MainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, ActiveMenuDirective, FooterComponent],
   bootstrap: [MainComponent],

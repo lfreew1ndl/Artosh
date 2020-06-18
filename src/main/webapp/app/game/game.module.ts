@@ -15,6 +15,12 @@ import { RouterModule } from '@angular/router';
         loadChildren: () => import('./word-translate/word-translate-game.module').then(m => m.ArtoshWordTranslateGameModule),
       },
     ]),
+    RouterModule.forChild([
+      {
+        path: 'games',
+        loadChildren: () => import('./game-list/game-list.module').then(m => m.ArtoshGameListModule),
+      },
+    ]),
   ],
 })
 export class ArtoshGameModule {}
