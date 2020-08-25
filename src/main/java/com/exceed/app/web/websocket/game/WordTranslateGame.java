@@ -8,13 +8,15 @@ import com.exceed.app.service.mapper.TranslateMapper;
 import com.exceed.app.web.websocket.dto.PlayerDTO;
 import com.exceed.app.web.websocket.dto.WordTranslateGameAction;
 import com.exceed.app.web.websocket.game.actions.ConfirmGameAction;
+import com.exceed.app.web.websocket.game.actions.GameAction;
 import com.exceed.app.web.websocket.game.actions.ProcessAnswerGameAction;
 import com.exceed.app.web.websocket.game.dto.StatusOfGame;
 import com.exceed.app.web.websocket.game.dto.WordTranslatePlayerData;
-import java.lang.reflect.Array;
+
 import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +43,10 @@ public class WordTranslateGame implements Runnable {
     private LinkedList<TranslateDTO> translatedWordQueue;
     private TranslateDTO lastTranslateDTO;
     private StatusOfGame statusOfGame = StatusOfGame.NEW;
+    private Integer orderNumberOfWord = 0;
 
-    public WordTranslateGame() {}
+    public WordTranslateGame() {
+    }
 
     public void addPlayer(PlayerDTO player) {
         this.players.add(player);
@@ -53,23 +57,26 @@ public class WordTranslateGame implements Runnable {
     }
 
     @Override
-    public void run() {}
+    public void run() {
+    }
 
-    public void processAction(WordTranslateGameAction action, Principal principal) {
-        WordTranslatePlayerData playerData = this.playerDataMap.get(principal.getName());
-        if (playerData == null) {
-            playerData = new WordTranslatePlayerData(principal.getName());
-            this.playerDataMap.put(principal.getName(), playerData);
-        } // todo move to initialization.
 
+    public synchronized void processAction(WordTranslateGameAction action, Principal principal) {
         if ("confirm_game".equals(action.getAction())) {
-            new ConfirmGameAction(this, principal).execute();
+            execute(new ConfirmGameAction(principal));
         } else if ("answer".equals(action.getAction())) {
-            new ProcessAnswerGameAction(this, principal, (String) action.getData()).execute();
+            List<Object> data = (List<Object>) action.getData();
+            execute(new ProcessAnswerGameAction(principal, (String) data.get(0), (Integer) data.get(1)));
         }
     }
 
-    public void initializeGame() {
+
+    public void execute(GameAction gameAction) {
+        gameAction.setGame(this);
+        gameAction.execute();
+    }
+
+    public void initializeGame() { //todo move to action
         LinkedList<Long> wordList = wordRepository
             .findAll()
             .stream()
@@ -77,25 +84,39 @@ public class WordTranslateGame implements Runnable {
             .map(Word::getId)
             .collect(Collectors.toCollection(LinkedList::new));
 
-        this.translatedWordQueue =
-            translateRepository
-                .findAllById(wordList)
-                .stream()
-                .map(translateMapper::toDto)
-                .collect(Collectors.toCollection(LinkedList::new));
-        this.translatedWordQueue.forEach(
-                e -> {
-                    Set<String> options = new HashSet<>();
-                    options.add(e.getTranslate());
+        this.translatedWordQueue = translateRepository
+            .findAllById(wordList)
+            .stream()
+            .map(translateMapper::toDto)
+            .collect(Collectors.toCollection(LinkedList::new));
 
-                    Random rand = new Random();
-                    while (options.size() < 4) {
-                        int randomIndex = rand.nextInt(translatedWordQueue.size());
-                        String randomElement = translatedWordQueue.get(randomIndex).getTranslate();
-                        options.add(randomElement);
-                    }
-                    e.setTranslateOptions(options);
+        this.translatedWordQueue
+            .forEach(
+            e -> {
+                Set<String> options = new HashSet<>();
+                options.add(e.getTranslate());
+
+                Random rand = new Random();
+                while (options.size() < 4) {
+                    int randomIndex = rand.nextInt(translatedWordQueue.size());
+                    String randomElement = translatedWordQueue.get(randomIndex).getTranslate();
+                    options.add(randomElement);
                 }
-            );
+                e.setTranslateOptions(options);
+            }
+        );
+
+        for (PlayerDTO player : this.getPlayers()) {
+            WordTranslatePlayerData playerData = new WordTranslatePlayerData(player.getUserLogin());
+            this.playerDataMap.put(player.getUserLogin(), playerData);
+        }
+    }
+
+    public Integer getOrderNumberOfWord() {
+        return orderNumberOfWord;
+    }
+
+    public void setOrderNumberOfWord(Integer orderNumberOfWord) {
+        this.orderNumberOfWord = orderNumberOfWord;
     }
 }

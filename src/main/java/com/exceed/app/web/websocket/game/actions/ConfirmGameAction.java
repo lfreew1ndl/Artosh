@@ -9,10 +9,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ConfirmGameAction extends GameAction {
-    public static final String GAME_CONFIRMED = "game_confirmed";
+    public static final String GAME_CONFIRMED = "GAME_CONFIRMED";
 
-    public ConfirmGameAction(WordTranslateGame game, Principal principal) {
-        super(game, principal);
+    public ConfirmGameAction(Principal principal) {
+        super(principal);
     }
 
     @Override
@@ -30,10 +30,9 @@ public class ConfirmGameAction extends GameAction {
         gameAction.setData("The game is starting in 3 second"); //todo remove text
         game.getMessagingTemplate().convertAndSend("/topic/game/" + game.getRoomId(), gameAction);
         TimerTask timerTask = new TimerTask() {
-
             @Override
             public void run() {
-                new NextCardGameAction(game, principal).execute();
+                game.execute(new NextCardGameAction(principal));
             }
         };
         new Timer().schedule(timerTask, 3000);

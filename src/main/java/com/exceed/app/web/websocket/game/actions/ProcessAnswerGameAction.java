@@ -3,19 +3,26 @@ package com.exceed.app.web.websocket.game.actions;
 import com.exceed.app.service.dto.TranslateDTO;
 import com.exceed.app.web.websocket.game.WordTranslateGame;
 import com.exceed.app.web.websocket.game.dto.WordTranslatePlayerData;
+
 import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ProcessAnswerGameAction extends GameAction {
-    public static final String GAME_CONFIRMED = "game_confirmed";
     private final String answer;
+    private final Integer orderNumber;
 
-    public ProcessAnswerGameAction(WordTranslateGame game, Principal principal, String answer) {
-        super(game, principal);
+    public ProcessAnswerGameAction(Principal principal, String answer, Integer orderNumber) {
+        super(principal);
         this.answer = answer;
+        this.orderNumber = orderNumber;
     }
 
     @Override
     public void execute() {
+        if (!game.getOrderNumberOfWord().equals(orderNumber))
+            return;
+
         TranslateDTO lastTranslateDTO = game.getLastTranslateDTO();
         WordTranslatePlayerData playerData = game.getPlayerDataMap().get(principal.getName());
         if (lastTranslateDTO.getTranslate().equals(answer)) {
@@ -23,6 +30,11 @@ public class ProcessAnswerGameAction extends GameAction {
         } else {
             playerData.getIncorrectTranslateWordDTOs().add(lastTranslateDTO);
         }
-        new NextCardGameAction(game, principal).execute();
+
+        if (game.getTranslatedWordQueue().isEmpty()) {
+            this.game.execute(new FinishGameAction(principal));
+        } else {
+            this.game.execute(new NextCardGameAction(principal));
+        }
     }
 }

@@ -1,8 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
-import { WordTranslateGameService } from 'app/game/word-translate/word-translate-game.service';
-import { WordTranslateGameAction } from 'app/core/game/word-translate-game-action';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Subscription} from 'rxjs';
+import {ActivatedRoute} from '@angular/router';
+import {WordTranslateGameService} from 'app/game/word-translate/word-translate-game.service';
+import {WordTranslateGameAction} from 'app/core/game/word-translate-game-action';
+import {NgbModal, NgbModalConfig} from "@ng-bootstrap/ng-bootstrap";
+import {GameResultModalComponent} from "app/game/gameResultModal/game-result-modal.component";
 
 class WordTranslateData {
   orderNumberOfWord: number | undefined;
@@ -21,8 +23,10 @@ export class WordTranslateGameComponent implements OnInit, OnDestroy {
   testString: string | undefined;
   gameData: WordTranslateData | undefined;
   isGameStarted = false;
+  resultModal: any;
 
-  constructor(private gameService: WordTranslateGameService, private route: ActivatedRoute) {}
+  constructor(private gameService: WordTranslateGameService, private route: ActivatedRoute, private modalService: NgbModal) {
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -38,20 +42,30 @@ export class WordTranslateGameComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.gameService.unsubscribe();
+    this.gameService.disconnect();
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
   }
 
+  showGameResults(data: any): void {
+    const modalRef = this.modalService.open(GameResultModalComponent);
+    modalRef.componentInstance.name = 'World';
+  }
+
   private processGameAction(gameAction: WordTranslateGameAction): any {
     switch (gameAction.action) {
-      case 'game_confirmed': {
+      case 'GAME_CONFIRMED': {
         this.testString = gameAction.action;
         break;
       }
-      case 'next_card': {
+      case 'NEXT_CARD': {
         this.gameData = gameAction.data;
         this.isGameStarted = true;
+        break;
+      }
+      case 'END_GAME': {
+        this.showGameResults(gameAction.data);
         break;
       }
       default: {
@@ -61,8 +75,12 @@ export class WordTranslateGameComponent implements OnInit, OnDestroy {
     }
   }
 
-  chooseAnswer(option: String | undefined): void {
-    const gameAction = new WordTranslateGameAction('answer', option);
+  chooseAnswer(option: String | undefined, orderNumberOfWord: number | undefined): void {
+    const data = [
+      option,
+      orderNumberOfWord
+    ]
+    const gameAction = new WordTranslateGameAction('answer', data);
     this.gameService.produceGameAction(gameAction);
   }
 }

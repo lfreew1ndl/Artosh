@@ -9,51 +9,20 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class NextCardGameAction extends GameAction {
-    public static final String NEXT_CARD = "next_card";
-    public static final String END_GAME = "END_GAME";
+    public static final String NEXT_CARD = "NEXT_CARD";
 
-    public NextCardGameAction(WordTranslateGame game, Principal principal) {
-        super(game, principal);
+    public NextCardGameAction(Principal principal) {
+        super(principal);
     }
 
     @Override
     public void execute() {
         WordTranslateGameAction gameAction = new WordTranslateGameAction();
-        if (game.getTranslatedWordQueue().isEmpty()) { //todo move to finish method or activity
-            gameAction.setAction(END_GAME);
-            int maxScore = game
-                .getPlayerDataMap()
-                .values()
-                .stream()
-                .mapToInt(
-                    wordTranslatePlayerData ->
-                        wordTranslatePlayerData.getCorrectTranslateWordDTOs().size() -
-                        wordTranslatePlayerData.getIncorrectTranslateWordDTOs().size()
-                )
-                .max()
-                .orElse(0);
-
-            List<WordTranslatePlayerData> playerData = game
-                .getPlayerDataMap()
-                .values()
-                .stream()
-                .filter(e -> (e.getCorrectTranslateWordDTOs().size() - e.getIncorrectTranslateWordDTOs().size()) == maxScore)
-                .collect(Collectors.toList());
-
-            if (playerData.size() == 1) {
-                gameAction.setData("Winner " + playerData.get(0).getPlayerName());
-            } else {
-                gameAction.setData("Draw");
-            }
-
-            game.getMessagingTemplate().convertAndSend("/topic/game/" + game.getRoomId(), gameAction);
-            return;
-        }
-
+        game.setOrderNumberOfWord(game.getOrderNumberOfWord() + 1);
         game.setLastTranslateDTO(game.getTranslatedWordQueue().poll());
 
         WordTranslateGameDTO gameDTO = new WordTranslateGameDTO(
-            0,
+            game.getOrderNumberOfWord(),
             game.getLastTranslateDTO().getWordWord(),
             game.getLastTranslateDTO().getTranslateOptions()
         );

@@ -1,2 +1,17 @@
-<p>lobby works!</p>
-{{roomModel?.roomId}}
+<div class="text-center">
+    <mat-spinner style="margin:0 auto;"
+                 mode="indeterminate"></mat-spinner>
+    <p>Waiting for other players!</p>
+    <p>{{test}}</p>
+
+    <button class="btn btn-outline-danger" (click)="cancelGame()">Cancel</button>
+</div>
+
+<!--<div class="card text-white bg-info mx-auto text-center" style="max-width: 18rem;">-->
+<!--    <div class="card-header">Header</div>-->
+<!--    <div class="card-body">-->
+<!--        <h5 class="card-title text-center">Info card title</h5>-->
+<!--        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the     card's content.</p>-->
+<!--    </div>-->
+<!--</div>-->
+<!--</div>-->

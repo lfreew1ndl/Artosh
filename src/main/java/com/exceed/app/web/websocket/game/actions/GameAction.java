@@ -4,12 +4,15 @@ import com.exceed.app.web.websocket.game.WordTranslateGame;
 import java.security.Principal;
 
 public abstract class GameAction {
-    protected final WordTranslateGame game;
+    protected WordTranslateGame game;
     protected final Principal principal;
 
-    public GameAction(WordTranslateGame game, Principal principal) {
-        this.game = game;
+    public GameAction(Principal principal) {
         this.principal = principal;
+    }
+
+    public void setGame(WordTranslateGame game){
+        this.game = game;
     }
 
     public abstract void execute();

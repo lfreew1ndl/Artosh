@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import {GameResultModalComponent} from "app/game/gameResultModal/game-result-modal.component";
 
 @NgModule({
+  declarations: [GameResultModalComponent],
   imports: [
     RouterModule.forChild([
       {
